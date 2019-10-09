@@ -97,7 +97,7 @@ return {
         type = "record",
         default = { metrics = DEFAULT_METRICS },
         fields = {
-          { host = typedefs.host({ required = true, default = "localhost" }), },
+          { host = { required = true, default = "KONG_DATADOG_K8S_HOST", type = "string" }, },
           { port = typedefs.port({ required = true, default = 8125 }), },
           { prefix = { type = "string", default = "kong" }, },
           { metrics = {
