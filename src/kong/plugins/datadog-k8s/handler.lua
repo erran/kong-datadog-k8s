@@ -1,3 +1,4 @@
+local BasePlugin       = require "kong.plugins.base_plugin"
 local basic_serializer = require "kong.plugins.log-serializers.basic"
 local statsd_logger    = require "kong.plugins.datadog-k8s.statsd_logger"
 
@@ -10,7 +11,7 @@ local string_format = string.format
 local NGX_ERR       = ngx.ERR
 
 
-local DatadogHandler    = {}
+local DatadogHandler    = BasePlugin:extend()
 DatadogHandler.PRIORITY = 10
 DatadogHandler.VERSION = "0.1.0"
 
@@ -29,8 +30,8 @@ local get_consumer_id = {
 
 
 local metrics = {
-  status_count = function (service_name, message, metric_config, logger)
-    local fmt = string_format("%s.request.status", service_name,
+  status_count = function (api_name, message, metric_config, logger)
+    local fmt = string_format("%s.request.status", api_name,
                        message.response.status)
 
     logger:send_statsd(string_format("%s.%s", fmt, message.response.status),
@@ -41,34 +42,34 @@ local metrics = {
                        logger.stat_types.counter,
                        metric_config.sample_rate, metric_config.tags)
   end,
-  unique_users = function (service_name, message, metric_config, logger)
+  unique_users = function (api_name, message, metric_config, logger)
     local get_consumer_id = get_consumer_id[metric_config.consumer_identifier]
     local consumer_id     = get_consumer_id(message.consumer)
 
     if consumer_id then
-      local stat = string_format("%s.user.uniques", service_name)
+      local stat = string_format("%s.user.uniques", api_name)
 
       logger:send_statsd(stat, consumer_id, logger.stat_types.set,
                          nil, metric_config.tags)
     end
   end,
-  request_per_user = function (service_name, message, metric_config, logger)
+  request_per_user = function (api_name, message, metric_config, logger)
     local get_consumer_id = get_consumer_id[metric_config.consumer_identifier]
     local consumer_id     = get_consumer_id(message.consumer)
 
     if consumer_id then
-      local stat = string_format("%s.user.%s.request.count", service_name, consumer_id)
+      local stat = string_format("%s.user.%s.request.count", api_name, consumer_id)
 
       logger:send_statsd(stat, 1, logger.stat_types.counter,
                          metric_config.sample_rate, metric_config.tags)
     end
   end,
-  status_count_per_user = function (service_name, message, metric_config, logger)
+  status_count_per_user = function (api_name, message, metric_config, logger)
     local get_consumer_id = get_consumer_id[metric_config.consumer_identifier]
     local consumer_id     = get_consumer_id(message.consumer)
 
     if consumer_id then
-      local fmt = string_format("%s.user.%s.request.status", service_name, consumer_id)
+      local fmt = string_format("%s.user.%s.request.status", api_name, consumer_id)
 
       logger:send_statsd(string_format("%s.%s", fmt, message.response.status),
                          1, logger.stat_types.counter,
@@ -87,9 +88,28 @@ local function log(premature, conf, message)
     return
   end
 
-  local name = string_gsub(message.service.name ~= ngx.null and
-                           message.service.name or message.service.host,
-                           "%.", "_")
+  local name
+
+  if message.service and message.service.name then
+    name = string_gsub(message.service.name ~= ngx.null and
+                       message.service.name or message.service.host,
+                       "%.", "_")
+
+  elseif message.api and message.api.name then
+    name = string_gsub(message.api.name, "%.", "_")
+
+  else
+    -- TODO: this follows the pattern used by
+    -- https://github.com/Kong/kong/pull/2702 (which prevents an error from
+    -- being thrown and avoids confusing reports as per our metrics keys), but
+    -- as it stands, hides traffic from monitoring tools when the plugin is
+    -- configured globally. In fact, this basically disables this plugin when
+    -- it is configured to run globally, or per-consumer without an
+    -- API/Route/Service.
+    ngx_log(ngx.DEBUG,
+            "[statsd] no Route/Service/API in context, skipping logging")
+    return
+  end
 
   local stat_name  = {
     request_size     = name .. ".request.size",
@@ -134,8 +154,15 @@ local function log(premature, conf, message)
 end
 
 
+function DatadogHandler:new()
+  DatadogHandler.super.new(self, "datadog")
+end
+
 function DatadogHandler:log(conf)
-  if not ngx.ctx.service then
+  DatadogHandler.super.log(self)
+
+  if not ngx.ctx.service and
+     not ngx.ctx.api     then
     return
   end
 
