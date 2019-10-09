@@ -3,7 +3,7 @@ return {
     name = "2017-06-09-160000_datadog_schema_changes",
     up = function(_, _, dao)
 
-      local plugins, err = dao.plugins:find_all { name = "datadog" }
+      local plugins, err = dao.plugins:find_all { name = "datadog-k8s" }
       if err then
         return err
       end
@@ -71,7 +71,7 @@ return {
         end
 
         local _, err = dao.plugins:insert {
-          name    = "datadog",
+          name    = "datadog-k8s",
           api_id  = datadog.api_id,
           enabled = datadog.enabled,
           config  = {

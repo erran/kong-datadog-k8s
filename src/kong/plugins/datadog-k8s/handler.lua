@@ -155,7 +155,7 @@ end
 
 
 function DatadogHandler:new()
-  DatadogHandler.super.new(self, "datadog")
+  DatadogHandler.super.new(self, "datadog-k8s")
 end
 
 function DatadogHandler:log(conf)
