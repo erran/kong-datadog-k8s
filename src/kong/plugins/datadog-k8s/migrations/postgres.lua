@@ -1,6 +1,6 @@
 return {
   {
-    name = "2017-06-09-160000_datadog_schema_changes",
+    name = "2019-10-10-000000_datadog_k8s_schema_changes",
     up = function(_, _, dao)
 
       local plugins, err = dao.plugins:find_all { name = "datadog-k8s" }
