@@ -1,5 +1,5 @@
 package = "kong-datadog-k8s"
-version = "0.0.1-0"
+version = "2.3.0-0"
 
 source = {
    url = "git://github.com/erran/kong-datadog-k8s",
