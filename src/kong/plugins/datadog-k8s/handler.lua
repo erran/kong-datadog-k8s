@@ -1,4 +1,4 @@
-local statsd_logger = require "kong.plugins.datadog.statsd_logger"
+local statsd_logger = require "kong.plugins.datadog-k8s.statsd_logger"
 
 
 local kong     = kong

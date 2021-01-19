@@ -66,7 +66,7 @@ local DEFAULT_METRICS = {
 
 
 return {
-  name = "datadog",
+  name = "datadog-k8s",
   fields = {
     { protocols = typedefs.protocols },
     { config = {
