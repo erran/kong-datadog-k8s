@@ -74,6 +74,7 @@ return {
         default = { metrics = DEFAULT_METRICS },
         fields = {
           { host = typedefs.host({ required = true, default = "localhost" }), },
+          { host_from_env = { type = "string", default = "KONG_DATADOG_K8S_HOST" }, },
           { port = typedefs.port({ required = true, default = 8125 }), },
           { prefix = { type = "string", default = "kong" }, },
           { metrics = {

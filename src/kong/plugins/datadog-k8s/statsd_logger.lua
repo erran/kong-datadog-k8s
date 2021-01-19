@@ -22,14 +22,15 @@ statsd_mt.__index = statsd_mt
 
 function statsd_mt:new(conf)
   local sock   = udp()
-  local _, err = sock:setpeername(conf.host, conf.port)
+  local host = os.getenv(conf.host_from_env) or conf.host
+  local _, err = sock:setpeername(host, conf.port)
   if err then
-    return nil, fmt("failed to connect to %s:%s: %s", conf.host,
+    return nil, fmt("failed to connect to %s:%s: %s", host,
                     tostring(conf.port), err)
   end
 
   local statsd = {
-    host       = conf.host,
+    host       = host,
     port       = conf.port,
     prefix     = conf.prefix,
     socket     = sock,
