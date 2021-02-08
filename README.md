@@ -4,6 +4,8 @@
 
 A fork of the bundled datadog plugin which supports passing host as an environment variable.
 
+A list of version can be found at http://luarocks.org/modules/erran/kong-datadog-k8s. The semantic version number of the LuaRock matches the version of Kong that was forked to create this plugin.
+
 ## Developing
 Build the docker image locally (you can use the .dev variant if you'd like to validate local changes).
 ```
