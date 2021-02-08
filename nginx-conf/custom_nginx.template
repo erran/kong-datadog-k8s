@@ -11,7 +11,7 @@ events {
     multi_accept on;
 }
 
-env KONG_DD_HOST;
+env KONG_DATADOG_K8S_HOST;
 
 http {
     include 'nginx-kong.conf';
