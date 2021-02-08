@@ -1,5 +1,5 @@
 package = "kong-datadog-k8s"
-version = "2.3.0-0"
+version = "0.14.1-0"
 
 source = {
    url = "git://github.com/erran/kong-datadog-k8s",
@@ -17,7 +17,6 @@ A fork of the bundled datadog plugin which supports environment variable to get 
 build = {
    type = "builtin",
    modules = {
-     ["kong.plugins.datadog-k8s.handler"] = "src/kong/plugins/datadog-k8s/handler.lua",
      ["kong.plugins.datadog-k8s.handler"] = "src/kong/plugins/datadog-k8s/handler.lua",
      ["kong.plugins.datadog-k8s.schema"] = "src/kong/plugins/datadog-k8s/schema.lua",
      ["kong.plugins.datadog-k8s.statsd_logger"] = "src/kong/plugins/datadog-k8s/statsd_logger.lua",

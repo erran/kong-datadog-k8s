@@ -1,0 +1,11 @@
+# vi: set ft=Dockerfile :
+FROM kong:0.14.1-alpine
+
+ADD docker-entrypoint.sh /docker-entrypoint.sh
+ADD nginx-conf/custom_nginx.template /usr/local/kong/custom_nginx.template
+ARG PLUGIN_ROCK_VERSION=0.14.1-0
+
+ADD src/ kong-datadog-k8s/src/
+ADD kong-datadog-k8s-$PLUGIN_ROCK_VERSION.rockspec kong-datadog-k8s/
+WORKDIR /kong-datadog-k8s/
+RUN luarocks make kong-datadog-k8s-$PLUGIN_ROCK_VERSION.rockspec
