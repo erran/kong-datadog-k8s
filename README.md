@@ -1,5 +1,10 @@
 # kong-datadog-k8s
-A fork of the bundled datadog plugin which supports passing host as an environment variable
+[![][LuaRocks latest version badge]](http://luarocks.org/modules/erran/kong-datadog-k8s)
+[![][LuaRocks 0.14.1-0 badge]](http://luarocks.org/modules/erran/kong-datadog-k8s/0.14.1-0)
+
+A fork of the bundled datadog plugin which supports passing host as an environment variable.
+
+:warning: Note this branch was build to be compatible with kong `0.14.1` and has only be validated against that for production usage. See the [default branch](https://github.com/erran/kong-datadog-k8s) to see the latest version of this LuaRocks module. :warning:
 
 ## Developing
 Build the docker image locally (you can use the .dev variant if you'd like to validate local changes).
@@ -55,3 +60,8 @@ docker logs
 To verify custom environment variable names you must update [custom_nginx.template](./custom_nginx.template)
 to call `env YOUR_VAR_NAME` and set the appropriate variable in your container's environment. Note that this
 requires re-building the docker image.
+
+
+[LuaRocks latest version badge]: https://img.shields.io/luarocks/v/erran/kong-datadog-k8s?label=luarocks%20%28latest%20version%29 "LuaRocks Latest"
+[LuaRocks 0.14.1-0 badge]: https://img.shields.io/luarocks/v/erran/kong-datadog-k8s/0.14.1-0 "LuaRocks 0.14.1-0"
+[LuaRocks 2.3.0-0 badge]: https://img.shields.io/luarocks/v/erran/kong-datadog-k8s/2.3.0-0 "LuaRocks Latest"
