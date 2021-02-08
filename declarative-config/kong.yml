@@ -1,0 +1,17 @@
+_format_version: "1.1"
+
+plugins:
+- name: datadog-k8s
+
+services:
+- name: example
+  url: https://httpbin.org/anything
+
+  routes:
+  - name: service
+    paths:
+    - /service
+    plugins:
+    - name: datadog-k8s
+      config:
+        host_from_env: KONG_DATADOG_K8S_HOST
