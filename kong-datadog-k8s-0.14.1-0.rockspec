@@ -3,7 +3,7 @@ version = "0.14.1-0"
 
 source = {
    url = "git://github.com/erran/kong-datadog-k8s",
-   dir = "kong-datadog-k8s",
+   tag = "0.14.1-0",
 }
 
 description = {
