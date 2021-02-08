@@ -7,7 +7,7 @@ A fork of the bundled datadog plugin which supports passing host as an environme
 ## Developing
 Build the docker image locally (you can use the .dev variant if you'd like to validate local changes).
 ```
-docker build -f Dockerfile.dev \
+docker build -f Dockerfile \
   --build-arg PLUGIN_ROCK_VERSION=2.3.0-0 \
   -t kong-k8s:2.3.0 .
 ```
